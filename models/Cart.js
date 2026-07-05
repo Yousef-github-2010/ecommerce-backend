@@ -24,7 +24,6 @@ const cartSchema = new Schema(
                 }
             }
         ],
-
         totalPrice: {
             type: Number,
             default: 0,

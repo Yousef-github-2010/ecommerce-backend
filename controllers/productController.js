@@ -5,7 +5,6 @@ import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
 
 const getProducts = asyncHandler(async (req, res) => {
-
     const { category, minPrice, maxPrice, search, inStock } = req.query;
 
     let filter = {};
@@ -40,11 +39,9 @@ const getProducts = asyncHandler(async (req, res) => {
             products
         )
     );
-
 });
 
 const getProduct = asyncHandler(async (req, res) => {
-
     const product = await Product.findById(req.params.id)
         .populate("category", "name description");
 
@@ -59,11 +56,9 @@ const getProduct = asyncHandler(async (req, res) => {
             product
         )
     );
-
 });
 
 const createProduct = asyncHandler(async (req, res) => {
-
     const category = await Category.findById(req.body.category);
 
     if (!category) {
@@ -104,7 +99,6 @@ const updateProduct = asyncHandler(async (req, res) => {
             product
         )
     );
-
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
@@ -121,7 +115,6 @@ const deleteProduct = asyncHandler(async (req, res) => {
             "Product deleted successfully"
         )
     );
-
 });
 
 export {

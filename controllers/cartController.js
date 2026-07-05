@@ -10,7 +10,6 @@ const getCart = asyncHandler(async (req, res) => {
         "items.product",
         "name price image"
     );
-
     res.json(
         generateResponse(
             "success",
@@ -18,19 +17,15 @@ const getCart = asyncHandler(async (req, res) => {
             cart
         )
     );
-
 });
 
 const addToCart = asyncHandler(async (req, res) => {
-
     const { product, quantity } = req.body;
-
     const foundProduct = await Product.findById(product);
 
     if (!foundProduct) {
         throw new AppError("Product not found", 404);
     }
-
     if (foundProduct.stock < quantity) {
         throw new AppError("Not enough stock", 400);
     }
@@ -49,17 +44,13 @@ const addToCart = asyncHandler(async (req, res) => {
     );
 
     if (existingItem) {
-
         existingItem.quantity += quantity;
-
     } else {
-
         cart.items.push({
             product,
             quantity,
             price: foundProduct.price
         });
-
     }
 
     cart.totalPrice = cart.items.reduce(
@@ -68,7 +59,6 @@ const addToCart = asyncHandler(async (req, res) => {
     );
 
     await cart.save();
-
     res.status(201).json(
         generateResponse(
             "success",
@@ -80,7 +70,6 @@ const addToCart = asyncHandler(async (req, res) => {
 });
 
 const updateCartItem = asyncHandler(async (req, res) => {
-
     const cart = await Cart.findOne();
 
     if (!cart) {
@@ -111,7 +100,6 @@ const updateCartItem = asyncHandler(async (req, res) => {
             cart
         )
     );
-
 });
 
 const deleteCartItem = asyncHandler(async (req, res) => {
@@ -130,7 +118,6 @@ const deleteCartItem = asyncHandler(async (req, res) => {
         (total, item) => total + item.price * item.quantity,
         0
     );
-
     await cart.save();
 
     res.json(

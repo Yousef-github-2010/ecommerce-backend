@@ -6,7 +6,6 @@ import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
 
 const getOrders = asyncHandler(async (req, res) => {
-
     const orders = await Order.find();
 
     res.json(
@@ -16,11 +15,9 @@ const getOrders = asyncHandler(async (req, res) => {
             orders
         )
     );
-
 });
 
 const getOrder = asyncHandler(async (req, res) => {
-
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -34,11 +31,9 @@ const getOrder = asyncHandler(async (req, res) => {
             order
         )
     );
-
 });
 
 const createOrder = asyncHandler(async (req, res) => {
-
     const cart = await Cart.findOne().populate("items.product");
 
     if (!cart || cart.items.length === 0) {
@@ -46,11 +41,9 @@ const createOrder = asyncHandler(async (req, res) => {
     }
 
     let totalPrice = 0;
-
     const items = [];
 
     for (const item of cart.items) {
-
         const product = await Product.findById(item.product._id);
 
         if (!product) {
@@ -74,21 +67,14 @@ const createOrder = asyncHandler(async (req, res) => {
             price: item.price,
             quantity: item.quantity
         });
-
     }
 
     const order = await Order.create({
-
         orderNumber: `ORD-${Date.now()}`,
-
         items,
-
         totalPrice,
-
         shippingAddress: req.body.shippingAddress,
-
         status: "Pending"
-
     });
 
     cart.items = [];
@@ -103,11 +89,9 @@ const createOrder = asyncHandler(async (req, res) => {
             order
         )
     );
-
 });
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
-
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -137,7 +121,6 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
             order
         )
     );
-
 });
 
 export {

@@ -8,7 +8,6 @@ import Order from "../models/Order.js";
 
 const seed = async () => {
     try {
-
         await connectDb();
 
         await Order.deleteMany({});
@@ -89,20 +88,13 @@ const seed = async () => {
                 inStock: true
             }
         ]);
-
         console.log(`${categories.length} Categories Added`);
         console.log(`${products.length} Products Added`);
-
     } catch (err) {
-
         console.log(err);
-
     } finally {
-
         await mongoose.disconnect();
-
         console.log("Disconnected from MongoDB");
-
     }
 };
 
