@@ -6,6 +6,12 @@ A RESTful E-Commerce Backend API built with Node.js, Express.js, MongoDB Atlas, 
 
 ---
 
+## GitHub Repository
+
+https://github.com/Yousef-github-2010/ecommerce-backend
+
+---
+
 ## Features
 
 - Categories CRUD
@@ -160,4 +166,4 @@ The Postman Collection and Environment files are available in the `postman` dire
 
 **Yousef Ibrahim**
 
-GitHub: https://github.com/Yousef-github-2010
+GitHub Account: https://github.com/Yousef-github-2010

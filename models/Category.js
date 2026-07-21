@@ -5,17 +5,17 @@ const categorySchema = new Schema(
         name: {
             type: String,
             required: [true, "Category name is required"],
+            unique: true,
             trim: true
         },
 
         description: {
             type: String,
-            required: [true, "Category description is required"]
+            trim: true
         },
 
         slug: {
             type: String,
-            required: [true, "Category slug is required"],
             unique: true,
             trim: true
         }
@@ -24,6 +24,16 @@ const categorySchema = new Schema(
         timestamps: true
     }
 );
+
+categorySchema.pre("save", function (next) {
+    if (this.isModified("name")) {
+        this.slug = this.name
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, "-");
+    }
+    next();
+});
 
 const Category = mongoose.model("Category", categorySchema);
 

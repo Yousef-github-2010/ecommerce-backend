@@ -5,7 +5,6 @@ import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
 
 const getCart = asyncHandler(async (req, res) => {
-
     const cart = await Cart.findOne().populate(
         "items.product",
         "name price image"
@@ -66,7 +65,6 @@ const addToCart = asyncHandler(async (req, res) => {
             cart
         )
     );
-
 });
 
 const updateCartItem = asyncHandler(async (req, res) => {
@@ -103,7 +101,6 @@ const updateCartItem = asyncHandler(async (req, res) => {
 });
 
 const deleteCartItem = asyncHandler(async (req, res) => {
-
     const cart = await Cart.findOne();
 
     if (!cart) {
@@ -127,7 +124,6 @@ const deleteCartItem = asyncHandler(async (req, res) => {
             cart
         )
     );
-
 });
 
 export {

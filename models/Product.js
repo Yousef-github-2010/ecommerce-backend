@@ -10,7 +10,8 @@ const productSchema = new Schema(
 
         description: {
             type: String,
-            required: [true, "Product description is required"]
+            required: [true, "Product description is required"],
+            trim: true
         },
 
         price: {
@@ -22,8 +23,8 @@ const productSchema = new Schema(
         stock: {
             type: Number,
             required: [true, "Product stock is required"],
-            min: [0, "Stock cannot be negative"],
-            default: 0
+            default: 0,
+            min: [0, "Stock cannot be negative"]
         },
 
         category: {
@@ -32,20 +33,21 @@ const productSchema = new Schema(
             required: [true, "Category is required"]
         },
 
-        image: {
-            type: String,
-            default: ""
-        },
-
-        inStock: {
-            type: Boolean,
-            default: true
+        images: {
+            type: [String],
+            default: []
         }
     },
     {
-        timestamps: true
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true }
     }
 );
+
+productSchema.virtual("inStock").get(function () {
+    return this.stock > 0;
+});
 
 const Product = mongoose.model("Product", productSchema);
 

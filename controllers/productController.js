@@ -4,33 +4,54 @@ import generateResponse from "../utils/generateResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import AppError from "../utils/AppError.js";
 
+// GET /api/products
 const getProducts = asyncHandler(async (req, res) => {
     const { category, minPrice, maxPrice, search, inStock } = req.query;
+    const filter = {};
 
-    let filter = {};
+    // Filter by category
+    if (category) {
+        filter.category = category;
+    }
 
-    if (category) filter.category = category;
-
+    // Filter by price
     if (minPrice || maxPrice) {
         filter.price = {};
 
-        if (minPrice) filter.price.$gte = Number(minPrice);
-        if (maxPrice) filter.price.$lte = Number(maxPrice);
+        if (minPrice) {
+            filter.price.$gte = Number(minPrice);
+        }
+
+        if (maxPrice) {
+            filter.price.$lte = Number(maxPrice);
+        }
     }
 
-    if (search) {
-        filter.name = {
-            $regex: search,
-            $options: "i"
-        };
-    }
-
+    // Filter by stock
     if (inStock === "true") {
-        filter.inStock = true;
+        filter.stock = { $gt: 0 };
+    }
+
+    // Filter in name OR description
+    if (search) {
+        filter.$or = [
+            {
+                name: {
+                    $regex: search,
+                    $options: "i"
+                }
+            },
+            {
+                description: {
+                    $regex: search,
+                    $options: "i"
+                }
+            }
+        ];
     }
 
     const products = await Product.find(filter)
-        .populate("category", "name description");
+        .populate("category", "name");
 
     res.json(
         generateResponse(
@@ -41,6 +62,7 @@ const getProducts = asyncHandler(async (req, res) => {
     );
 });
 
+// GET /api/products/:id
 const getProduct = asyncHandler(async (req, res) => {
     const product = await Product.findById(req.params.id)
         .populate("category", "name description");
@@ -58,6 +80,7 @@ const getProduct = asyncHandler(async (req, res) => {
     );
 });
 
+// POST /api/products
 const createProduct = asyncHandler(async (req, res) => {
     const category = await Category.findById(req.body.category);
 
@@ -74,10 +97,18 @@ const createProduct = asyncHandler(async (req, res) => {
             product
         )
     );
-
 });
 
+// PATCH /api/products/:id
 const updateProduct = asyncHandler(async (req, res) => {
+
+    if (req.body.category) {
+        const category = await Category.findById(req.body.category);
+
+        if (!category) {
+            throw new AppError("Category not found", 404);
+        }
+    }
 
     const product = await Product.findByIdAndUpdate(
         req.params.id,
@@ -86,7 +117,7 @@ const updateProduct = asyncHandler(async (req, res) => {
             new: true,
             runValidators: true
         }
-    );
+    ).populate("category", "name description");
 
     if (!product) {
         throw new AppError("Product not found", 404);
@@ -101,6 +132,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     );
 });
 
+// DELETE /api/products/:id
 const deleteProduct = asyncHandler(async (req, res) => {
 
     const product = await Product.findByIdAndDelete(req.params.id);
